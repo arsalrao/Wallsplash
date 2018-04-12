@@ -3,6 +3,7 @@ package com.media.wallpapers.wallsplash.fragments;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -34,9 +35,6 @@ public class LatestWallpaperFragment extends Fragment implements SwipeRefreshLay
     private LatestWallpaperAdapter adapter;
     private List<Photo> mWallpaperList;
     private SwipeRefreshLayout mSwipeRefresh;
-    private int pageNumber = 1;
-    private RecyclerView.OnScrollListener onScrollListener;
-    private boolean isLoadOnce = true;
     private int currentPage = 1;
 
 
@@ -56,9 +54,9 @@ public class LatestWallpaperFragment extends Fragment implements SwipeRefreshLay
         latestWallpaperRv.setLayoutManager(new GridLayoutManager(view.getContext(), 1));
         adapter = new LatestWallpaperAdapter(getActivity(), mWallpaperList, null);
         latestWallpaperRv.setAdapter(adapter);
-        //  sampleText = view.findViewById(R.id.sampleText);
 
 
+        int pageNumber = 1;
         fetchData(pageNumber);
 
         mSwipeRefresh.setOnRefreshListener(this);
@@ -82,12 +80,11 @@ public class LatestWallpaperFragment extends Fragment implements SwipeRefreshLay
 
     private void fetchData(int pageNumber) {
 
-        /*if(pageNumber<3) {*/
         mSwipeRefresh.setRefreshing(true);
 
 
         ApiInterface apiService = ApiClient.getRetrofit().create(ApiInterface.class);
-        Call<List<Photo>> call = apiService.getPhotos(pageNumber, 10, "latest", API_KEY);
+        Call<List<Photo>> call = apiService.getPhotos(pageNumber, 30, "latest", API_KEY);
         call.enqueue(new Callback<List<Photo>>() {
             @Override
             public void onResponse(Call<List<Photo>> call, Response<List<Photo>> response) {
@@ -109,13 +106,12 @@ public class LatestWallpaperFragment extends Fragment implements SwipeRefreshLay
             @Override
             public void onFailure(Call<List<Photo>> call, Throwable t) {
                 Log.i(TAG, "ERROR--->" + t.getMessage());
+                showSnackBar(getString(R.string.check_your_internet_connection));
                 mSwipeRefresh.setRefreshing(false);
                 Toast.makeText(getActivity(), "Error--> " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-        /*}*//*else{
-            Toast.makeText(getActivity(), "page number exceed", Toast.LENGTH_SHORT).show();
-        }*/
+
     }
 
     @Override
@@ -133,5 +129,17 @@ public class LatestWallpaperFragment extends Fragment implements SwipeRefreshLay
 
     public void setCurrentPage(int currentPage) {
         this.currentPage = currentPage;
+    }
+
+    public void showSnackBar(String msg) {
+        View v = getActivity().findViewById(R.id.latest_swipe_fm);
+        Snackbar snackbar = Snackbar.make(v, msg, Snackbar.LENGTH_INDEFINITE);
+        snackbar.setAction(R.string.load, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fetchData(getCurrentPage());
+            }
+        });
+        snackbar.show();
     }
 }
