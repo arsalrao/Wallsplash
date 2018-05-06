@@ -21,6 +21,10 @@ android {
 
 
 
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
 }
 //support library version
 ext.supportLibrary = '27.1.0'
@@ -50,6 +54,13 @@ dependencies {
     annotationProcessor "com.github.bumptech.glide:compiler:$glideLib"
     //palette
     implementation "com.android.support:palette-v7:$supportLibrary"
+    // ViewModel and LiveData
+    implementation "android.arch.lifecycle:extensions:1.1.1"
+    annotationProcessor "android.arch.lifecycle:compiler:1.1.1"
+    // Paging
+    // Paging
+    implementation "android.arch.paging:runtime:1.0.0-rc1"
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'

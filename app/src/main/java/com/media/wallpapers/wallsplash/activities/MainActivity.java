@@ -19,6 +19,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private Toolbar toolbar;
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout = findViewById(R.id.tabs_layout);
         ViewPager pager = findViewById(R.id.viewPager);
         PagerAdapter adapter = new com.media.wallpapers.wallsplash.viewpager.PagerAdapter(getSupportFragmentManager(), getFlist(), getTabName());
-        pager.setOffscreenPageLimit(2);
+        pager.setOffscreenPageLimit(3);
         pager.setAdapter(adapter);
         tabLayout.setupWithViewPager(pager);
         TabLayout.Tab tab = tabLayout.getTabAt(0);

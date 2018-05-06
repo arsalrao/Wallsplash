@@ -1,10 +1,11 @@
 package com.media.wallpapers.wallsplash.adapter;
 
+import android.arch.paging.PagedListAdapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.util.DiffUtil;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.RequestManager;
-import com.media.wallpapers.wallsplash.MyApp;
 import com.media.wallpapers.wallsplash.R;
 import com.media.wallpapers.wallsplash.holder.LatestWallpaperHolder;
 import com.media.wallpapers.wallsplash.model.Photo;
@@ -20,18 +20,29 @@ import com.media.wallpapers.wallsplash.utill.GlideApp;
 
 import java.util.List;
 
-public class LatestWallpaperAdapter extends RecyclerView.Adapter<LatestWallpaperHolder> {
+public class LatestWallpaperAdapter extends PagedListAdapter<Photo, LatestWallpaperHolder> {
     private static final String TAG = LatestWallpaperAdapter.class.getSimpleName();
-    private List<Photo> mWallpaperList;
-    private Context mContext;
-    private RequestManager glide;
+    public static final DiffUtil.ItemCallback<Photo> DIFF_CALLBACK = new DiffUtil.ItemCallback<Photo>() {
+        @Override
+        public boolean areItemsTheSame(Photo oldItem, Photo newItem) {
+            return oldItem.getPhotoId().equals(newItem.getPhotoId());
+        }
 
+        @Override
+        public boolean areContentsTheSame(Photo oldItem, Photo newItem) {
+            return oldItem.equals(newItem);
+        }
+
+    };
+    private RequestManager glide;
+    // private List<Photo> mWallpaperList;
+    private Context mContext;
     public LatestWallpaperAdapter(Context context, List<Photo> mWallpaperList, RequestManager glide) {
+        super(DIFF_CALLBACK);
         this.mContext = context;
-        this.mWallpaperList = mWallpaperList;
+        //this.mWallpaperList = mWallpaperList;
         this.glide = glide;
     }
-
     @NonNull
     @Override
     public LatestWallpaperHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -42,22 +53,22 @@ public class LatestWallpaperAdapter extends RecyclerView.Adapter<LatestWallpaper
 
     @Override
     public void onBindViewHolder(@NonNull LatestWallpaperHolder holder, int position) {
-        Photo photo = mWallpaperList.get(position);
+        Photo photo = getItem(position);
         String paletteRGBColor = photo.getPhotoColor() != null ? photo.getPhotoColor() : "#29b6f6";
-        Log.i(TAG, "color-->" + paletteRGBColor);
+        // Log.i(TAG, "color-->" + paletteRGBColor);
         int color = Color.parseColor(paletteRGBColor);
         int height = photo.getPhotoHeight();
         int width = photo.getPhotoWidth();
-        Log.i("MYAPP", MyApp.getInstance() + "");
+        /*Log.i("MYAPP", MyApp.getInstance() + "");
         Log.i("Height", height + "");
         Log.i("width", width + "");
-
+*/
 
         DisplayMetrics displayMetrics = mContext.getResources().getDisplayMetrics();
-        Log.i("DiplayMatrics-->", displayMetrics.widthPixels + "");
+        //Log.i("DiplayMatrics-->", displayMetrics.widthPixels + "");
 
         float finalHeight = displayMetrics.widthPixels / ((float) width / (float) height);
-        Log.i("Display final Height", finalHeight + "");
+        // Log.i("Display final Height", finalHeight + "");
        /*holder.getmLatestWallpaperIv().getLayoutParams().height = height;
        holder.getmLatestWallpaperIv().getLayoutParams().width = width;
        holder.getmLatestWallpaperIv().requestLayout();*/
@@ -72,11 +83,10 @@ public class LatestWallpaperAdapter extends RecyclerView.Adapter<LatestWallpaper
 
                 .into(holder.getmLatestWallpaperIv());
         holder.getmLatestWallpaperIv().setMinimumHeight((int) finalHeight);
+        Log.i(TAG, "photo id :" + photo.getPhotoId());
+        Log.i(TAG, "photo url :" + photo.getPhotoUrl().getSmall());
 
     }
 
-    @Override
-    public int getItemCount() {
-        return mWallpaperList.size();
-    }
+
 }
