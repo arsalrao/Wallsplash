@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.media.wallpapers.wallsplash.R;
 import com.media.wallpapers.wallsplash.adapter.LatestWallpaperAdapter;
@@ -39,6 +38,7 @@ public class LatestWallpaperFragment extends Fragment implements SwipeRefreshLay
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         viewModel = ViewModelProviders.of(this).get(PhotoViewModel.class);
     }
 
@@ -67,7 +67,7 @@ public class LatestWallpaperFragment extends Fragment implements SwipeRefreshLay
                         case FAILED:
                             mSwipeRefresh.setRefreshing(false);
                             Log.i(TAG, "Failed--> swipe false");
-                            showSnackBar("check your internet connection");
+                            showSnackBar(getString(R.string.check_internet));
                             break;
                         default:
                             mSwipeRefresh.setRefreshing(false);
@@ -85,14 +85,8 @@ public class LatestWallpaperFragment extends Fragment implements SwipeRefreshLay
         adapter = new LatestWallpaperAdapter(getContext(), null, null);
 
         mLatestRv.setAdapter(adapter);
+        mSwipeRefresh.setOnRefreshListener(this);
 
-
-        mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-
-            }
-        });
     }
 
     private void setupLayoutmanager() {
@@ -100,13 +94,6 @@ public class LatestWallpaperFragment extends Fragment implements SwipeRefreshLay
         mLatestRv.setLayoutManager(linearLayoutManager);
     }
 
-    @Override
-    public void onRefresh() {
-        //fetchData(getCurrentPage());
-
-        Toast.makeText(getActivity(), "swipe refreshing", Toast.LENGTH_SHORT).show();
-
-    }
 
     public void showSnackBar(String msg) {
         View v = getActivity().findViewById(R.id.latest_swipe_fm);
@@ -118,5 +105,10 @@ public class LatestWallpaperFragment extends Fragment implements SwipeRefreshLay
             }
         });
         snackbar.show();
+    }
+
+    @Override
+    public void onRefresh() {
+        mSwipeRefresh.setRefreshing(false);
     }
 }

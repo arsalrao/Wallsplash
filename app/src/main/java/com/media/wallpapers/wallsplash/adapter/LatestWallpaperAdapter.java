@@ -22,7 +22,7 @@ import java.util.List;
 
 public class LatestWallpaperAdapter extends PagedListAdapter<Photo, LatestWallpaperHolder> {
     private static final String TAG = LatestWallpaperAdapter.class.getSimpleName();
-    public static final DiffUtil.ItemCallback<Photo> DIFF_CALLBACK = new DiffUtil.ItemCallback<Photo>() {
+    private static final DiffUtil.ItemCallback<Photo> DIFF_CALLBACK = new DiffUtil.ItemCallback<Photo>() {
         @Override
         public boolean areItemsTheSame(Photo oldItem, Photo newItem) {
             return oldItem.getPhotoId().equals(newItem.getPhotoId());
@@ -54,7 +54,7 @@ public class LatestWallpaperAdapter extends PagedListAdapter<Photo, LatestWallpa
     @Override
     public void onBindViewHolder(@NonNull LatestWallpaperHolder holder, int position) {
         Photo photo = getItem(position);
-        String paletteRGBColor = photo.getPhotoColor() != null ? photo.getPhotoColor() : "#29b6f6";
+        String paletteRGBColor = photo.getPhotoColor() != null ? photo.getPhotoColor() : mContext.getString(R.string.default_palette_color);
         // Log.i(TAG, "color-->" + paletteRGBColor);
         int color = Color.parseColor(paletteRGBColor);
         int height = photo.getPhotoHeight();

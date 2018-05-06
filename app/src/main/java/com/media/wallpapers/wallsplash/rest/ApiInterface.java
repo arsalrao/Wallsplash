@@ -17,5 +17,13 @@ public interface ApiInterface {
             @Query("order_by") String orderBy,
             @Query("client_id") String apiKey
     );
+
+    @GET("photos/curated")
+    Call<List<Photo>> getCuratedPhotos(
+            @Query("page") int pageNumber,
+            @Query("per_page") int perPage,
+            @Query("order_by") String orderBy,
+            @Query("client_id") String apiKey
+    );
 }
 

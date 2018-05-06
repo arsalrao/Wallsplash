@@ -3,4 +3,6 @@
     <string name="check_your_internet_connection">Check your internet connection</string>
     <string name="load">Load</string>
     <string name="api_key">fc12a678353fd3cda9afb77ebbdeec416b4352021c85051b174d033603596f6f</string>
+    <string name="default_palette_color">#29b6f6</string>
+    <string name="check_internet">check your internet connection</string>
 </resources>
